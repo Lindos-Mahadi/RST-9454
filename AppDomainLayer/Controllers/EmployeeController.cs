@@ -56,15 +56,23 @@ namespace AppDomainLayer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Gender,Email,Country")] Employee employee)
+        public async Task<IActionResult> Create(Employee model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
+                var emp = new Employee()
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    Country = model.Country,
+                    Gender = model.Gender,
+                };
+                _context.Add(emp);
                 await _context.SaveChangesAsync();
+                TempData["empData"] = "Employee create successfully.";
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(model);
         }
 
         // GET: Employee/Edit/5
@@ -88,23 +96,35 @@ namespace AppDomainLayer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Gender,Email,Country")] Employee employee)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != employee.Id)
+            if (id == null || _context.Employee == null)
             {
                 return NotFound();
             }
-
+            var emp = await _context.Employee.SingleOrDefaultAsync(e => e.Id == id);
+            if (emp == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(employee);
+                    var eMP = new Employee()
+                    {
+                        Name = emp.Name,
+                        Email = emp.Email,
+                        Country = emp.Country,
+                        Gender = emp.Gender,
+                    };
+                    _context.Update(eMP);
+                    TempData["empData"] = "Employee updated successfully.";
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!EmployeeExists(emp.Id))
                     {
                         return NotFound();
                     }
@@ -115,7 +135,7 @@ namespace AppDomainLayer.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(emp);
         }
 
         // GET: Employee/Delete/5
@@ -126,8 +146,7 @@ namespace AppDomainLayer.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await _context.Employee.FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -152,6 +171,7 @@ namespace AppDomainLayer.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["empData"] = "Employee deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
