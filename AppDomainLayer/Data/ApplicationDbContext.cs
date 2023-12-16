@@ -1,4 +1,5 @@
 ﻿using AppDomainLayer.Models;
+using AppDomainLayer.Models.Account;
 using AppDomainLayer.SeedDataFolder;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace AppDomainLayer.Data
 
         // Other DbSet properties can be added for additional entities
         public DbSet<Employee> Employee { get; set; }
+        public DbSet<User> User { get; set; }
 
 
 
@@ -20,6 +22,10 @@ namespace AppDomainLayer.Data
         {
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
         }
+
+
+
+        public DbSet<AppDomainLayer.Models.Account.LoginSignUpViewModel>? LoginSignUpViewModel { get; set; }
 
     }
     
