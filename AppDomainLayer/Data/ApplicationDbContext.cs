@@ -1,4 +1,5 @@
 ﻿using AppDomainLayer.Models;
+using AppDomainLayer.SeedDataFolder;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppDomainLayer.Data
@@ -13,5 +14,13 @@ namespace AppDomainLayer.Data
         // Other DbSet properties can be added for additional entities
         public DbSet<Employee> Employee { get; set; }
 
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        }
+
     }
+    
 }
