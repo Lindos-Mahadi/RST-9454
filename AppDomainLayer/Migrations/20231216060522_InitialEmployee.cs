@@ -17,7 +17,7 @@ namespace AppDomainLayer.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Country = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                    Country = table.Column<string>(type: "decimal(18,2)", nullable: true)
                 },
                 constraints: table =>
                 {
