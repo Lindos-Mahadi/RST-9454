@@ -1,5 +1,6 @@
 ﻿using AppDomainLayer.Models;
 using AppDomainLayer.Models.Account;
+using AppDomainLayer.Models.ViewModel;
 using AppDomainLayer.SeedDataFolder;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,10 +23,6 @@ namespace AppDomainLayer.Data
         {
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
         }
-
-
-
-        public DbSet<AppDomainLayer.Models.Account.LoginSignUpViewModel>? LoginSignUpViewModel { get; set; }
 
     }
     

@@ -1,5 +1,6 @@
 ﻿using AppDomainLayer.Data;
 using AppDomainLayer.Models.Account;
+using AppDomainLayer.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppDomainLayer.Controllers
