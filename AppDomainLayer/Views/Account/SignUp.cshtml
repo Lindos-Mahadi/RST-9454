@@ -1,17 +1,17 @@
-﻿@model AppDomainLayer.Models.Account.User
+﻿@model AppDomainLayer.Models.ViewModel.SignUpUserViewModel
 
 @{
     ViewData["Title"] = "SignUp";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
-<h1>SignUp</h1>
-
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row mt-5">
+    <div class="col-md-4 border p-3 mx-auto">
+        <div class="text-center text-info"><h4>User Registration form</h4></div>
+        <hr />
         <form asp-action="SignUp">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
@@ -32,6 +32,11 @@
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
@@ -43,14 +48,14 @@
                 </label>
             </div> *@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Sign Up" class="btn btn-primary" />
+                <a class="btn btn-info" asp-action="Login">Back to Login</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
