@@ -1,7 +1,11 @@
 ﻿using AppDomainLayer.Data;
 using AppDomainLayer.Models.Account;
 using AppDomainLayer.Models.ViewModel;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace AppDomainLayer.Controllers
 {
@@ -22,18 +26,46 @@ namespace AppDomainLayer.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Login(LoginSignUpViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginSignUpViewModel model)
         {
             try
             {
+                if (ModelState.IsValid)
+                {
+                    var user = await _context.User.Select(u => u.UserName == model.UserName && u.Password == model.Password).SingleOrDefaultAsync();
+
+                    if (user != null)
+                    {
+                        var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, model.UserName) }, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var principal = new ClaimsPrincipal(claimsIdentity);
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                        HttpContext.Session.SetString("UserName", model.UserName);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        TempData["errorMessage"] = "Invalid UserName or Password!";
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    TempData["errorMsg"] = "User Not Found!";
+                    return View(model);
+                }
 
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                throw;
             }
-            return View();
+
+        }
+        public IActionResult LogOut()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
         public IActionResult SignUp()
         {
