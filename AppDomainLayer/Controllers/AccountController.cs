@@ -3,6 +3,7 @@ using AppDomainLayer.Models.Account;
 using AppDomainLayer.Models.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -27,41 +28,52 @@ namespace AppDomainLayer.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginSignUpViewModel model)
+        public async Task<IActionResult> Login(LoginUserViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var user = await _context.User.Select(u => u.UserName == model.UserName && u.Password == model.Password).SingleOrDefaultAsync();
+                    // Check if the user exists in the database
+                    var user = await _context.User.FirstOrDefaultAsync(u => u.UserName == model.UserName && u.IsActive);
 
                     if (user != null)
                     {
-                        var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, model.UserName) }, CookieAuthenticationDefaults.AuthenticationScheme);
-                        var principal = new ClaimsPrincipal(claimsIdentity);
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                        HttpContext.Session.SetString("UserName", model.UserName);
-                        return RedirectToAction("Index", "Home");
+                        // Use PasswordHasher to verify the password
+                        var passwordHasher = new PasswordHasher<User>();
+                        var passwordVerificationResult = passwordHasher.VerifyHashedPassword(null, user.PasswordHash, model.Password);
+
+                        if (passwordVerificationResult == PasswordVerificationResult.Success)
+                        {
+                            // Authentication successful
+                            var claimsIdentity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, model.UserName) }, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var principal = new ClaimsPrincipal(claimsIdentity);
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                            HttpContext.Session.SetString("UserName", model.UserName);
+
+                            // Redirect to a dashboard or home page
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Invalid password");
+                        }
                     }
                     else
                     {
-                        TempData["errorMessage"] = "Invalid UserName or Password!";
-                        return View(model);
+                        ModelState.AddModelError(string.Empty, "User not found or inactive");
                     }
                 }
-                else
-                {
-                    TempData["errorMsg"] = "User Not Found!";
-                    return View(model);
-                }
-
             }
             catch (Exception ex)
             {
-                throw;
+                // Log the exception or handle it as needed
+                ModelState.AddModelError(string.Empty, "An error occurred while processing your request");
             }
 
+            return View(model);
         }
+
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -79,11 +91,14 @@ namespace AppDomainLayer.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    // Use PasswordHasher to hash the password
+                    var passwordHasher = new PasswordHasher<User>();
+                    var hashedPassword = passwordHasher.HashPassword(null, model.Password);
                     var user = new User()
                     {
                         UserName = model.UserName,
                         Email = model.Email,
-                        Password = model.Password,
+                        PasswordHash = hashedPassword,
                         Mobile = model.Mobile,
                         IsActive = model.IsActive,
                         //IsRemember = model.IsRemember,
