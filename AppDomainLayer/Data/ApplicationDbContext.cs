@@ -16,6 +16,7 @@ namespace AppDomainLayer.Data
         // Other DbSet properties can be added for additional entities
         public DbSet<Employee> Employee { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<ImageUpload> ImageUpload { get; set; }
 
 
 
@@ -23,6 +24,10 @@ namespace AppDomainLayer.Data
         {
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
         }
+
+
+
+        public DbSet<AppDomainLayer.Models.ViewModel.ImageUploadViewModel>? ImageUploadViewModel { get; set; }
 
     }
     
