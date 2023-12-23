@@ -1,4 +1,4 @@
-﻿@model AppDomainLayer.Models.ViewModel.LoginSignUpViewModel
+﻿@model AppDomainLayer.Models.ViewModel.LoginUserViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -9,6 +9,7 @@
     <div class="col-md-4 border p-3 mx-auto">
         <h1>Login</h1>
         <hr />
+        <div class="text-success text-center">@TempData["errorMsg"]</div>
         <div class="text-success text-center">@TempData["successMSG"]</div>
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
