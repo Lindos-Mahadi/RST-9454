@@ -5,10 +5,19 @@
 }
 
 <h1>Index</h1>
-
+@using System.IO
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment
+
+@{
+    var imagesPath = System.IO.Path.Combine(HostingEnvironment.ContentRootPath, "Images");
+}
+
+<!-- Rest of your code -->
+
+
 <table class="table">
     <thead>
         <tr>
@@ -22,18 +31,46 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-                <td><img src="@item.ImagePath" style="height:50px; width:50px;" /></td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @{
+                        var imageFormat = GetImageFormat(item.ImagePath);
+                        var imagePath = System.IO.Path.Combine(imagesPath, item.ImagePath);
+                        var base64String = $"data:{imageFormat};base64,{Convert.ToBase64String(System.IO.File.ReadAllBytes(imagePath))}";
+                    }
+                    <img src="@base64String" alt="@item.Name" style="height:100px; width:100px;" />
+
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@functions {
+    private string GetImageFormat(string imagePath)
+    {
+        var extension = System.IO.Path.GetExtension(imagePath)?.TrimStart('.');
+        switch (extension?.ToLower())
+        {
+            case "jpg":
+                return "image/jpg";
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            // Add more cases for other image formats as needed
+            default:
+                return "image/png"; // Default to PNG if the format is unknown
+        }
+    }
+}

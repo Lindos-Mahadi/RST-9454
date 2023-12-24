@@ -67,26 +67,67 @@ namespace AppDomainLayer.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var path = _environment.WebRootPath;
-                    var filePath = "Content/Image/" + model.ImageFile.FileName;
-                    var fullPath = Path.Combine(path, filePath);
-                    UploadFile(model.ImageFile, fullPath);
+                    // Generate a unique filename for the image
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+
+                    // Specify the directory where you want to save the image
+                    var directoryPath = Path.Combine(_environment.ContentRootPath, "Images");
+
+                    // Create the directory if it does not exist
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    var filePath = Path.Combine(directoryPath, fileName);
+
+                    // Save the image to the specified path
+                    UploadFile(model.ImageFile, filePath);
+
+                    // Save the image information to the database
                     var data = new ImageUpload()
                     {
                         Name = model.Name,
-                        ImagePath = filePath,
+                        ImagePath = fileName, // Save the filename in the database
                     };
+
                     await _context.AddAsync(data);
                     await _context.SaveChangesAsync();
+
                     return RedirectToAction("Index");
                 }
+
                 return View(model);
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                // Handle the exception appropriately (logging, error message, etc.)
+                return RedirectToAction("Error");
             }
+            //try
+            //{
+            //    if (ModelState.IsValid)
+            //    {
+            //        var path = _environment.WebRootPath;
+            //        var filePath = "Content/Image/" + model.ImageFile.FileName;
+            //        var fullPath = Path.Combine(path, filePath);
+            //        UploadFile(model.ImageFile, fullPath);
+            //        var data = new ImageUpload()
+            //        {
+            //            Name = model.Name,
+            //            ImagePath = filePath,
+            //        };
+            //        await _context.AddAsync(data);
+            //        await _context.SaveChangesAsync();
+            //        return RedirectToAction("Index");
+            //    }
+            //    return View(model);
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw ex;
+            //}
         }
         public void UploadFile(IFormFile file, string path)
         {
