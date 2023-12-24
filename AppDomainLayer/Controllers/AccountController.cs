@@ -79,6 +79,19 @@ namespace AppDomainLayer.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
+        [AcceptVerbs("Post", "Get")]
+        public async Task<IActionResult> UserNameIsExist(string userName)
+        {
+            var usrName = await _context.User.Where(u => u.UserName == userName).FirstOrDefaultAsync();
+            if (usrName != null)
+            {
+                return Json($"UserName {userName} is already exist");
+            }
+            else
+            {
+                return Json(true);
+            }
+        }
         public IActionResult SignUp()
         {
             return View();

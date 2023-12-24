@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppDomainLayer.Models.ViewModel
 {
@@ -7,6 +8,7 @@ namespace AppDomainLayer.Models.ViewModel
         [Key]
         public int Id { get; set; }
         [Required(ErrorMessage = "Please enter user name")]
+        [Remote(action: "UserNameIsExist", controller: "Account")]
         [Display(Name ="User Name")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Please enter email")]
