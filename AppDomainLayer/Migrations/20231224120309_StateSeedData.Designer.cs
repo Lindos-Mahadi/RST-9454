@@ -3,6 +3,7 @@ using AppDomainLayer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppDomainLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231224120309_StateSeedData")]
+    partial class StateSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,68 +75,6 @@ namespace AppDomainLayer.Migrations
                     b.HasIndex("StateId");
 
                     b.ToTable("City");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CityName = "City 1",
-                            StateId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CityName = "City 2",
-                            StateId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CityName = "City 3",
-                            StateId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CityName = "City 4",
-                            StateId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CityName = "City 5",
-                            StateId = 3
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CityName = "City 6",
-                            StateId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CityName = "City 7",
-                            StateId = 4
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CityName = "City 8",
-                            StateId = 4
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CityName = "City 9",
-                            StateId = 5
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CityName = "City 10",
-                            StateId = 5
-                        });
                 });
 
             modelBuilder.Entity("AppDomainLayer.Models.Cascade.Country", b =>

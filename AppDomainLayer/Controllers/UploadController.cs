@@ -231,45 +231,45 @@ namespace AppDomainLayer.Controllers
 
 
         // GET: Upload/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.ImageUploadViewModel == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null || _context.ImageUploadViewModel == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var imageUploadViewModel = await _context.ImageUploadViewModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (imageUploadViewModel == null)
-            {
-                return NotFound();
-            }
+        //    var imageUploadViewModel = await _context.ImageUploadViewModel
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (imageUploadViewModel == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(imageUploadViewModel);
-        }
+        //    return View(imageUploadViewModel);
+        //}
 
         // POST: Upload/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.ImageUploadViewModel == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.ImageUploadViewModel'  is null.");
-            }
-            var imageUploadViewModel = await _context.ImageUploadViewModel.FindAsync(id);
-            if (imageUploadViewModel != null)
-            {
-                _context.ImageUploadViewModel.Remove(imageUploadViewModel);
-            }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (_context.ImageUploadViewModel == null)
+        //    {
+        //        return Problem("Entity set 'ApplicationDbContext.ImageUploadViewModel'  is null.");
+        //    }
+        //    var imageUploadViewModel = await _context.ImageUploadViewModel.FindAsync(id);
+        //    if (imageUploadViewModel != null)
+        //    {
+        //        _context.ImageUploadViewModel.Remove(imageUploadViewModel);
+        //    }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool ImageUploadViewModelExists(int id)
-        {
-            return (_context.ImageUploadViewModel?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        //private bool ImageUploadViewModelExists(int id)
+        //{
+        //    return (_context.ImageUploadViewModel?.Any(e => e.Id == id)).GetValueOrDefault();
+        //}
     }
 }

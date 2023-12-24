@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Cascade Dropdown";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h4>Cascade Dropdown</h4>
+
+<div class="container">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <form method="post">
+                <div class="form-group">
+                    <label class="">Country</label>
+                    <select class="form-control" id="country">
+                        <option>--Select Country--</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="">State</label>
+                    <select class="form-control" id="state">
+                        <option>--Select State--</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="">City</label>
+                    <select class="form-control" id="city">
+                        <option>--Select City--</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts{
+    <script src="~/js/cascadedropdown.js"></script>
+}
